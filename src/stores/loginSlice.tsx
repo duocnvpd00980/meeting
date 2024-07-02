@@ -29,15 +29,7 @@ const loginSlice: StateCreator<ILoginSlice> = (set) => ({
   setLogin: (user) => set({ login: user }),
   setLogout: () =>
     set({
-      login: {
-        userID: '',
-        userName: '',
-        userEmail: '',
-        userDep: '',
-        created: '',
-        isActive: '',
-        userRole: 0,
-      },
+      login: initialState.login,
     }),
 })
 

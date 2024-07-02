@@ -110,14 +110,7 @@ const managerSlice: StateCreator<IManagerSlice> = (set) => ({
     set((state) => ({
       manager: {
         ...state.manager,
-        userId: {
-          userID: '',
-          userName: '',
-          userEmail: '',
-          userDep: '',
-          created: '',
-          isActive: '',
-        },
+        userId: initialState.manager.userId,
       },
     })),
   clearBookedId: () =>
@@ -131,14 +124,7 @@ const managerSlice: StateCreator<IManagerSlice> = (set) => ({
     set((state) => ({
       manager: {
         ...state.manager,
-        roomId: {
-          roomID: '',
-          roomName: '',
-          roomSeat: '',
-          roomOption: '',
-          created: '',
-          isActive: '',
-        },
+        roomId: initialState.manager.roomId,
       },
     })),
   clearReserveRoom: () =>
