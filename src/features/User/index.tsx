@@ -5,10 +5,12 @@ import UserCreateModal from './UserCreateModal'
 import UserList from './UserList'
 import UserUpdateModal from './UserUpdateModal'
 import UserWatcher from './UserWatcher'
+import { useTranslation } from 'react-i18next'
 const { Content } = Layout
 const { Title } = Typography
 
 const User: React.FC = () => {
+  const { t } = useTranslation()
   return (
     <Content
       style={{
@@ -18,21 +20,20 @@ const User: React.FC = () => {
     >
       <Toolbar>
         <Title level={2} style={{ margin: 0 }}>
-          List user
+          {t('user.list-user')}
         </Title>
         <Space>
           <UserCreateModal />
         </Space>
       </Toolbar>
-
       <Breadcrumb
         style={{ margin: '24px 16px' }}
         items={[
           {
-            title: 'Home',
+            title: t('home'),
           },
           {
-            title: 'List user',
+            title: t('user.list-user'),
           },
         ]}
       />

@@ -5,10 +5,12 @@ import RoomCreateModal from './RoomCreateModal'
 import RoomList from './RoomList'
 import RoomWatcher from './RoomWatcher'
 import RoomUpdateModal from './RoomUpdateModal'
+import { useTranslation } from 'react-i18next'
 const { Content } = Layout
 const { Title } = Typography
 
 const Room: React.FC = () => {
+  const { t } = useTranslation('ns1')
   return (
     <Content
       style={{
@@ -18,7 +20,7 @@ const Room: React.FC = () => {
     >
       <Toolbar>
         <Title level={2} style={{ margin: 0 }}>
-          List room
+          {t('room.list-room')}
         </Title>
         <Space>
           <RoomCreateModal />

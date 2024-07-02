@@ -1,6 +1,7 @@
 import { Input } from 'antd'
 import _ from 'lodash'
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 const { TextArea } = Input
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const ReserveRoomComment = ({ invalid, setComment }: Props) => {
+  const { t } = useTranslation('ns1')
   const debouncedSave = useCallback(
     _.debounce((value) => {
       setComment({
@@ -23,7 +25,7 @@ const ReserveRoomComment = ({ invalid, setComment }: Props) => {
   return (
     <TextArea
       rows={4}
-      placeholder="Comment"
+      placeholder={t('booking.comment')}
       maxLength={400}
       onChange={(e) => handleChangeTextArea(e.target.value)}
       disabled={invalid}

@@ -1,6 +1,5 @@
 // Các giá trị hằng số:
 export const MAX_ATTEMPTS = 3
-export const API_URL = 'http://localhost:5173/public/'
 
 // Các chuỗi hằng số:
 export const SERVICE = {

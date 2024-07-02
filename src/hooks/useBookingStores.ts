@@ -11,14 +11,11 @@ const calendar = () => {
     calendar: state.calendar,
     calendarId: state.manager.calendarId,
   }))
+  if (typeof calendar === 'string') return []
+  if (!calendarId) return []
   const result = calendar.filter((item) => item.roomID === calendarId)
-  if (!result.length) {
-    return calendar
-  }
-  if (result.length > 0) {
-    return result
-  }
-  return []
+  if (!result.length) return []
+  return result
 }
 
 const useBookingStores = () => ({

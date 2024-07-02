@@ -7,7 +7,7 @@ export interface ILoginState {
 
 interface LoginActions {
   setLogin: (user: IUserLogin) => void
-  setLogout: (user: IUserLogin) => void
+  setLogout: () => void
 }
 
 export type ILoginSlice = ILoginState & LoginActions

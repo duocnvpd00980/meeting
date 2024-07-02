@@ -42,7 +42,7 @@ const columns: TableProps<IBooking>['columns'] = [
     dataIndex: 'action',
     width: 180,
     key: 'action',
-    render: (_, item: IBooking) => <BookedDelete id={item.bookedID} />,
+    render: (_, item: IBooking) => <BookedDelete bookedID={item.bookedID} />,
   },
 ]
 

@@ -1,7 +1,9 @@
+import { Badge } from 'antd'
 import moment from 'moment'
 import React from 'react'
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+import { IoNotifications } from 'react-icons/io5'
 import useBookingStores from '../../hooks/useBookingStores'
 
 const localizer = momentLocalizer(moment)
@@ -11,8 +13,25 @@ const ReserveCalendar: React.FC = () => {
   const meetings = calendar()
   const events = meetings.map((meeting) => ({
     id: meeting.bookedID,
-    title: meeting.userName,
-    hello: ' welcome',
+    title: (
+      <>
+        <Badge status="success" /> {meeting.userName}
+        {meeting.bookedComment && (
+          <>
+            <IoNotifications
+              style={{
+                fontSize: 16,
+                margin: '0 6 0 15',
+                position: 'relative',
+                top: 3,
+                color: '#ff4d4f',
+              }}
+            />
+            {meeting.bookedComment}
+          </>
+        )}
+      </>
+    ),
     start: new Date(`${meeting.bookedDate}T${meeting.bookedTimeStart}`),
     end: new Date(`${meeting.bookedDate}T${meeting.bookedTimeEnd}`),
   }))

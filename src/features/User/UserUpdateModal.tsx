@@ -6,8 +6,11 @@ import { useUserAPIs } from '../../hooks/useUserAPIs'
 import { IFieldUser } from '../../services/userService'
 import { useQueryClient } from '@tanstack/react-query'
 import { SERVICE } from '../../constants'
+import { useTranslation } from 'react-i18next'
+import { schemaEmail, schemaTeam, schemaUsername } from '../../validationSchema'
 
 const UserUpdateModal = () => {
+  const { t } = useTranslation('ns1')
   const [open, setOpen] = useState(false)
   const { userId, clearUserId } = useManagerStores()
   const [form] = Form.useForm()
@@ -22,44 +25,41 @@ const UserUpdateModal = () => {
       form.setFieldValue('dep', user.userDep)
       setOpen(true)
     }
-  }, [user, form])
-
+  }, [user])
   const handleFinish = (values: IFieldUser) => {
     if (
       user.userName === values.name &&
       user.userEmail === values.email &&
       user.userDep === values.dep
     ) {
-      message.info(
-        'No changes have been made. Please update the information before saving.',
-      )
+      message.info(t('message.no-changes'))
       return
     }
     const dataForm = { ...values, uId: user.userID }
     return mutate([dataForm], {
       onSuccess: () => {
-        message.success('Meeting room created successfully!')
+        setOpen(false)
         queryClient.refetchQueries({
           queryKey: [SERVICE.USER.READ],
           type: 'active',
         })
+        message.success(t('message.meeting-successfully'))
+        clearUserId()
       },
       onError: () => {
-        message.error('Failed to create meeting room. Please try again later.')
+        message.error(t('message.meeting-failed'))
       },
     })
   }
-
   const handleCancel = () => {
     setOpen(false)
     clearUserId()
+    form.resetFields()
   }
-
   if (!user.userID) return
-
   return (
     <Modal
-      title="Update user"
+      title={t('user.update-user')}
       centered
       open={open}
       width={1000}
@@ -76,40 +76,21 @@ const UserUpdateModal = () => {
         onFinish={handleFinish}
       >
         <Form.Item
-          label="User name"
+          label={t('user.user-name')}
           name="name"
-          rules={[
-            { required: true, message: 'Please input the user name!' },
-            { type: 'string', min: 3 },
-          ]}
+          rules={schemaUsername}
         >
           <Input />
         </Form.Item>
-
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[
-            { required: true, message: 'Please enter your email address.' },
-            { type: 'email', message: 'Your email is valid.' },
-          ]}
-        >
+        <Form.Item label={t('user.email')} name="email" rules={schemaEmail}>
           <Input />
         </Form.Item>
-        <Form.Item
-          label="Team"
-          name="dep"
-          rules={[
-            { required: true, message: 'Please input the team!' },
-            { type: 'string', min: 1 },
-          ]}
-        >
+        <Form.Item label={t('user.team')} name="dep" rules={schemaTeam}>
           <Input />
         </Form.Item>
-
         <Flex align="flex-end" justify="flex-end">
           <Button type="primary" htmlType="submit" icon={<IoIosSave />}>
-            Save
+            {t('action.save')}
           </Button>
         </Flex>
       </Form>

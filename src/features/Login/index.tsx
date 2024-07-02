@@ -4,6 +4,9 @@ import { MdOutlineEmail } from 'react-icons/md'
 import BoxFix from '../../components/BoxFix'
 import useLogin from '../../hooks/useLogin'
 import { useLoginAPI } from '../../hooks/useLoginAPI'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { schemaLogin } from '../../validationSchema'
 
 const { Title } = Typography
 
@@ -11,17 +14,16 @@ const Login: React.FC = () => {
   const { onSubmit } = useLogin()
   const [form] = Form.useForm()
   const { mutate, isPending } = useLoginAPI()
+  const { t } = useTranslation('ns1')
+  useEffect(() => {
+    form.resetFields()
+  }, [])
+
   return (
     <BoxFix>
-      <Title>Login</Title>
+      <Title>{t('login')}</Title>
       <Form form={form} onFinish={onSubmit(mutate)} autoComplete="off">
-        <Form.Item
-          name="email"
-          rules={[
-            { required: true, message: 'Please enter your email address.' },
-            { type: 'email', message: 'Your email is valid.' },
-          ]}
-        >
+        <Form.Item name="email" rules={schemaLogin}>
           <Input size="large" placeholder="Email" prefix={<MdOutlineEmail />} />
         </Form.Item>
         <Button
@@ -31,7 +33,7 @@ const Login: React.FC = () => {
           loading={isPending}
           icon={<AiOutlineLogin />}
         >
-          Login
+          {t('login')}
         </Button>
       </Form>
     </BoxFix>

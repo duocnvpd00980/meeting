@@ -1,0 +1,65 @@
+{
+  "home": "Home",
+  "login": "Login",
+  "logout": {
+    "title": "Logout",
+    "description": "Are you sure you want to exit the application?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "delete-booking": {
+    "title": "Delete Booking",
+    "description": "Are you sure you want to delete this booking time?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "action": {
+    "text": "Action",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "remove": "Remove",
+    "save": "save"
+  },
+  "message": {
+    "invalid-time": "Invalid time",
+    "minimum-meeting": "Invalid time",
+    "overlapping-times": "Invalid time",
+    "successfully-booked": "Successfully booked the chosen meeting date.",
+    "successfully-booking": "Booking successfully added",
+    "meeting-successfully": "Meeting room created successfully!",
+    "meeting-failed": "Failed to create meeting room. Please try again later.",
+    "no-changes": "No changes have been made. Please update the information before saving."
+  },
+  "booking": {
+    "book-meeting-room": "Book meeting room",
+    "booked-room": "Booked room",
+    "list-room": "List room",
+    "select-room": "Select room",
+    "start-date": "Start date",
+    "end-date": "End date",
+    "comment": "Comment",
+    "book-room": "Book room",
+    "booking-confirmation": "Booking Confirmation"
+  },
+  "room": {
+    "list-room": "List room",
+    "create-room": "Create room",
+    "name": "Name",
+    "seat": "Seat",
+    "room-Name": "Room Name",
+    "select-room": "Select room",
+    "seats-number": "Seats Number",
+    "update-room": "Update room"
+  },
+  "user": {
+    "list-user": "List user",
+    "create-user": "Create user",
+    "name": "Name",
+    "team": "Team",
+    "user-name": "User name",
+    "email": "Email",
+    "update-user": "update user"
+  }
+}

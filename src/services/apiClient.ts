@@ -1,8 +1,8 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { API_URL } from '../constants'
+import axios from 'axios'
+const apiUrl = import.meta.env.VITE_API_URL
 
 const instance = axios.create({
-  baseURL: API_URL,
+  baseURL: apiUrl,
   headers: { 'Content-Type': 'type; charset=utf-8' },
 })
 
@@ -35,7 +35,6 @@ class APIClient<T> {
 
   findByBooked = (now: string, saveStore?: (data: T[]) => void) => () =>
     instance.get<T[]>(`${this.endpoint}/${now}`).then((res) => {
-      console.log('saveStore')
       if (saveStore) saveStore(res.data)
       return res.data
     })

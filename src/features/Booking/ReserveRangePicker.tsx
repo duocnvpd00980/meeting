@@ -12,24 +12,29 @@ import {
   groupByDateBookingHelper,
   ICheckBooked,
 } from '../../helpers/groupByDateBookingHelper'
+import { useTranslation } from 'react-i18next'
+import { useQueryClient } from '@tanstack/react-query'
+import { SERVICE } from '../../constants'
 
 dayjs.extend(customParseFormat)
 
 const { Title } = Typography
 const ReserveRangePicker = () => {
+  const { t } = useTranslation('ns1')
   const { addReserveRoom, reserveRoom } = useManagerStores()
   const { calendar } = useBookingStores()
   const [date, setDate] = useState<any>([])
   const [error, setError] = useState<boolean | null>(null)
   const [api, contextHolder] = notification.useNotification()
+  const queryClient = useQueryClient()
   const reserve = reserveRoom()
   const bookersList = calendar()
-  const groupByDateBooking = groupByDateBookingHelper(bookersList)
+
   const openNotification = (iconReact: ReactNode, description: string) => {
     api.open({
       message: (
         <Title level={4} style={{ lineHeight: 1.2 }}>
-          Booking Confirmation
+          {t('booking.booking-confirmation')}
         </Title>
       ),
       description,
@@ -38,8 +43,12 @@ const ReserveRangePicker = () => {
     })
   }
 
-  const handleRangeChange = (dates: [Dayjs, Dayjs] | any) => {
-    setDate(dates)
+  const handleRangeChange = async (dates: [Dayjs, Dayjs] | any) => {
+    await queryClient.refetchQueries({
+      queryKey: [SERVICE.BOOKING.CALENDAR],
+      type: 'active',
+    })
+    const groupByDateBooking = groupByDateBookingHelper(bookersList)
     if (!date) return
     const startDate = dayjs(dates[0].toString()).format('YYYY-MM-DD,HH:mm')
     const endDate = dayjs(dates[1].toString()).format('YYYY-MM-DD,HH:mm')
@@ -51,35 +60,36 @@ const ReserveRangePicker = () => {
         bookedTimeEnd: '00:00',
       },
     ]
-
     const {
       isInvalidTimeCheck,
       isCheckOverlappingTimes,
       isCheckMinimumMeeting,
     } = checkBookingHelpers(startHours, endHours, dateBooking)
 
+    setDate(dates)
     setError(true)
-
+    addReserveRoom({
+      bDate: startDay,
+    })
     if (isInvalidTimeCheck) {
       return openNotification(
         <MdError style={{ color: 'red' }} />,
-        'Invalid time',
+        t('message.invalid-time'),
       )
     }
     if (isCheckMinimumMeeting(30)) {
       return openNotification(
         <MdError style={{ color: 'red' }} />,
-        'Minimum meeting',
+        t('message.minimum-meeting'),
       )
     }
     if (isCheckOverlappingTimes) {
       return openNotification(
         <MdError style={{ color: 'red' }} />,
-        'Overlapping times',
+        t('message.overlapping-times'),
       )
     }
     setError(false)
-
     addReserveRoom({
       bDate: startDay,
       bTimeStart: startHours,
@@ -88,16 +98,16 @@ const ReserveRangePicker = () => {
     })
     openNotification(
       <FaCheckCircle style={{ color: '#52C41A' }} />,
-      'Successfully booked the chosen meeting date.',
+      t('message.successfully-booked'),
     )
   }
-
   useEffect(() => {
     if (!reserve.bDate) {
       setDate([])
       setError(null)
     }
   }, [reserve.bDate])
+
   return (
     <>
       {contextHolder}

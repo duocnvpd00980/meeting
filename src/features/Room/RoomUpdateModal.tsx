@@ -6,8 +6,11 @@ import { IFieldRoom } from '../../services/roomService'
 import { useManagerStores } from '../../hooks/useManagerStores'
 import { useQueryClient } from '@tanstack/react-query'
 import { SERVICE } from '../../constants'
+import { useTranslation } from 'react-i18next'
+import { schemaRoomName, schemaRoomSeats } from '../../validationSchema'
 
 const RoomUpdateModal = () => {
+  const { t } = useTranslation('ns1')
   const [open, setOpen] = useState(false)
   const { roomId, clearRoomId } = useManagerStores()
   const [form] = Form.useForm()
@@ -15,42 +18,45 @@ const RoomUpdateModal = () => {
   const { mutate } = useUpdateOne()
   const queryClient = useQueryClient()
   const room = roomId()
+
   useEffect(() => {
     if (room.roomID) {
       form.setFieldValue('name', room.roomName)
       form.setFieldValue('seat', room.roomSeat)
       setOpen(true)
     }
-  }, [room, form])
+  }, [room])
+
   const handleFinish = (values: IFieldRoom) => {
     if (room.roomName === values.name && room.roomSeat === values.seat) {
-      message.info(
-        'No changes have been made. Please update the information before saving.',
-      )
+      message.info(t('message.no-changes'))
       return
     }
     const dataForm = { ...values, rId: room.roomID, opt: 'Nan' }
     return mutate([dataForm], {
       onSuccess: () => {
-        message.success('Meeting room created successfully!')
+        setOpen(false)
         queryClient.refetchQueries({
           queryKey: [SERVICE.ROOM.READ],
           type: 'active',
         })
+        message.success(t('message.meeting-successfully'))
+        clearRoomId()
       },
       onError: () => {
-        message.error('Failed to create meeting room. Please try again later.')
+        message.error(t('message.meeting-failed'))
       },
     })
   }
   const handleCancel = () => {
     setOpen(false)
     clearRoomId()
+    form.resetFields()
   }
   if (!room.roomID) return
   return (
     <Modal
-      title="Update room"
+      title={t('room.update-room')}
       centered
       open={open}
       width={1000}
@@ -67,38 +73,24 @@ const RoomUpdateModal = () => {
         onFinish={handleFinish}
       >
         <Form.Item
-          label="Room Name"
+          label={t('room.room-Name')}
           name="name"
-          rules={[
-            { required: true, message: 'Please input the room name!' },
-            { type: 'string', min: 3 },
-          ]}
+          rules={schemaRoomName}
         >
-          <Input value="1212123" />
+          <Input value="" />
         </Form.Item>
 
         <Form.Item
-          label="Seats Number"
+          label={t('room.seats-number')}
           name="seat"
-          rules={[
-            { required: true, message: 'Please input the number of seats!' },
-            {
-              type: 'number',
-              min: 1,
-              max: 50,
-              message: 'Seats number must be between 1 and 50',
-              transform: (value) => {
-                return isNaN(Number(value)) ? 0 : Number(value)
-              },
-            },
-          ]}
+          rules={schemaRoomSeats}
         >
-          <Input value="1212123" />
+          <Input value="" />
         </Form.Item>
 
         <Flex align="flex-end" justify="flex-end">
           <Button type="primary" htmlType="submit" icon={<IoIosSave />}>
-            Save
+            {t('action.save')}
           </Button>
         </Flex>
       </Form>

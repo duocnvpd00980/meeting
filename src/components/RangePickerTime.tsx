@@ -18,11 +18,9 @@ const disabledRangeTime: RangePickerProps['disabledTime'] = (_, type) => {
       disabledHours: () => {
         const startHour = _.hour()
         const disabledHours = []
-        if (dayjs().isSame(_, 'day')) {
-          for (let i = 0; i < 24; i++) {
-            if (i < 6 || i > 21 || i < startHour) {
-              disabledHours.push(i)
-            }
+        for (let i = 0; i < 24; i++) {
+          if (i < 6 || i > 21 || i < startHour) {
+            disabledHours.push(i)
           }
         }
         return disabledHours
@@ -38,13 +36,10 @@ const disabledRangeTime: RangePickerProps['disabledTime'] = (_, type) => {
   if (type === 'end') {
     return {
       disabledHours: () => {
-        const startHour = _.hour()
         const disabledHours = []
-        if (dayjs().isSame(_, 'day')) {
-          for (let i = 0; i < 24; i++) {
-            if (i < 6 || i > 21 || i < startHour) {
-              disabledHours.push(i)
-            }
+        for (let i = 0; i < 24; i++) {
+          if (i < 6 || i > 21) {
+            disabledHours.push(i)
           }
         }
         return disabledHours

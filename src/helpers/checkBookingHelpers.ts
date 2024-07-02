@@ -28,7 +28,6 @@ export const checkBookingHelpers = (
       hour.toString().padStart(2, '0') +
       ':' +
       minute.toString().padStart(2, '0')
-    console.log(minTime, endTime)
     return minTime <= endTime ? false : true
   }
 

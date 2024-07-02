@@ -5,9 +5,11 @@ import { useEffect, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { SERVICE } from '../../constants'
 import ReserveRoomComment from './ReserveRoomComment'
+import { useTranslation } from 'react-i18next'
 
 const ReserveRoomCreate = () => {
   const { useInsertMany } = useBookingAPIs()
+  const { t } = useTranslation()
   const { reserveRoom, clearReserveRoom } = useManagerStores()
   const [invalid, setInvalid] = useState<boolean>(true)
   const [comment, setComment] = useState<object>()
@@ -34,7 +36,7 @@ const ReserveRoomCreate = () => {
       onSuccess: () => {
         clearReserveRoom()
         setInvalid(true)
-        message.success('booking successfully added')
+        message.success(t('message.successfully-booking'))
         queryClient.refetchQueries({
           queryKey: [SERVICE.BOOKING.CALENDAR],
           type: 'active',
@@ -54,7 +56,7 @@ const ReserveRoomCreate = () => {
         loading={isPending}
         disabled={invalid}
       >
-        Book room
+        {t('booking.book-room')}
       </Button>
     </>
   )

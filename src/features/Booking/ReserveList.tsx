@@ -1,23 +1,24 @@
 import { Button, List } from 'antd'
-import React from 'react'
 import { IoCheckmarkCircle } from 'react-icons/io5'
 import { TbEye } from 'react-icons/tb'
 import { useManagerStores } from '../../hooks/useManagerStores'
 import { useRoomStores } from '../../hooks/useRoomStores'
 import ReserveListWatcher from './ReserveListWatcher'
+import { useTranslation } from 'react-i18next'
 
 const ReserveList: React.FC = () => {
+  const { t } = useTranslation()
   const { room } = useRoomStores()
   const { addCalendarId, calendarId, addReserveRoom } = useManagerStores()
   const dataSource = room()
   const handleBooking = (id: string) => {
     addCalendarId(id)
-    addReserveRoom({ rId: id, bDate: '' })
+    addReserveRoom({ rId: id, bDate: undefined })
   }
   return (
     <ReserveListWatcher>
       <List
-        header={<h3>List room</h3>}
+        header={<h3>{t('room.list-room')}</h3>}
         style={{ height: 360, overflowY: 'scroll' }}
         bordered
         dataSource={dataSource}
@@ -41,7 +42,7 @@ const ReserveList: React.FC = () => {
                   icon={<TbEye style={{ fontSize: 20 }} />}
                   onClick={() => handleBooking(item.roomID)}
                 >
-                  Select room
+                  {t('room.select-room')}
                 </Button>
               ) : (
                 <IoCheckmarkCircle style={{ fontSize: 30, color: '#52C41A' }} />

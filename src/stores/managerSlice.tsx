@@ -1,7 +1,6 @@
 import { StateCreator } from 'zustand'
 import { IRoom } from '../services/roomService'
 import { IUser } from '../services/userService'
-import { IUserLogin } from '../services/loginService'
 
 export interface IReserveRoom {
   rId?: string
@@ -23,12 +22,9 @@ export interface IManagerState {
     calendarId: string
     reserveRoom: IReserveRoom
   }
-  login: IUserLogin
 }
 
 interface IManagerActions {
-  setLogin: (login: IUserLogin) => void
-  setLogout: () => void
   addUserId: (userId: IUser) => void
   addRoomId: (roomId: IRoom) => void
   addBookedId: (bookedId: object) => void
@@ -63,41 +59,15 @@ const initialState: IManagerState = {
     bookedId: {},
     calendarId: '',
     reserveRoom: {
-      uId: '1',
       bComment: '',
       bActive: 1,
       bStatus: 0,
     },
   },
-  login: {
-    userID: '',
-    userName: '',
-    userEmail: '',
-    userDep: '',
-    created: '',
-    isActive: '',
-    userRole: 0,
-  },
 }
 
 const managerSlice: StateCreator<IManagerSlice> = (set) => ({
   ...initialState,
-  setLogin: (login) => set({ login }),
-  setLogout: () =>
-    set((state) => ({
-      manager: {
-        ...state.manager,
-        login: {
-          userID: '',
-          userName: '',
-          userEmail: '',
-          userDep: '',
-          created: '',
-          isActive: '',
-          userRole: 0,
-        },
-      },
-    })),
   addUserId: (userId) =>
     set((state) => ({
       manager: {

@@ -4,18 +4,35 @@ import { MdAddCard, MdLibraryAdd } from 'react-icons/md'
 import { useRoomAPIs } from '../../hooks/useRoomAPIs'
 import { useQueryClient } from '@tanstack/react-query'
 import { SERVICE } from '../../constants'
+import { useTranslation } from 'react-i18next'
+import { schemaRoomName, schemaRoomSeats } from '../../validationSchema'
 
 const RoomCreateModal = () => {
   const { useInsertOne } = useRoomAPIs()
   const { mutate } = useInsertOne()
   const [open, setOpen] = useState(false)
   const [form] = Form.useForm()
+  const { t } = useTranslation('ns1')
   const queryClient = useQueryClient()
   const handleCancel = () => {
-    console.log('Clicked cancel button')
     setOpen(false)
     form.resetFields()
   }
+  const handleFinish = (values: any) =>
+    mutate([{ opt: '', ...values }], {
+      onSuccess: () => {
+        setOpen(false)
+        queryClient.refetchQueries({
+          queryKey: [SERVICE.ROOM.READ],
+          type: 'active',
+        })
+        message.success(t('message.meeting-successfully'))
+      },
+      onError: () => {
+        message.error(t('message.meeting-failed'))
+      },
+    })
+
   return (
     <>
       <Button
@@ -24,11 +41,10 @@ const RoomCreateModal = () => {
         onClick={() => setOpen(true)}
         icon={<MdLibraryAdd />}
       >
-        Create room
+        {t('room.create-room')}
       </Button>
-
       <Modal
-        title="Create room"
+        title={t('room.create-room')}
         centered
         open={open}
         width={1000}
@@ -41,56 +57,25 @@ const RoomCreateModal = () => {
           layout="vertical"
           colon={false}
           style={{ marginTop: 26 }}
-          onFinish={(values) =>
-            mutate([{ opt: '', ...values }], {
-              onSuccess: () => {
-                message.success('Meeting room created successfully!')
-                queryClient.refetchQueries({
-                  queryKey: [SERVICE.ROOM.READ],
-                  type: 'active',
-                })
-              },
-              onError: () => {
-                message.error(
-                  'Failed to create meeting room. Please try again later.',
-                )
-              },
-            })
-          }
+          onFinish={(values) => handleFinish(values)}
         >
           <Form.Item
-            label="Room Name"
+            label={t('room.room-Name')}
             name="name"
-            rules={[
-              { required: true, message: 'Please input the room name!' },
-              { type: 'string', min: 3 },
-            ]}
+            rules={schemaRoomName}
           >
             <Input />
           </Form.Item>
-
           <Form.Item
-            label="Seats Number"
+            label={t('room.seats-number')}
             name="seat"
-            rules={[
-              { required: true, message: 'Please input the number of seats!' },
-              {
-                type: 'number',
-                min: 1,
-                max: 50,
-                message: 'Seats number must be between 1 and 50',
-                transform: (value) => {
-                  return isNaN(Number(value)) ? 0 : Number(value)
-                },
-              },
-            ]}
+            rules={schemaRoomSeats}
           >
             <Input />
           </Form.Item>
-
           <Flex align="flex-end" justify="flex-end">
             <Button type="primary" htmlType="submit" icon={<MdAddCard />}>
-              Create
+              {t('action.create')}
             </Button>
           </Flex>
         </Form>

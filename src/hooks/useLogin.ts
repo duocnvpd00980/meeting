@@ -4,8 +4,6 @@ import { SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { IUserLogin } from '../services/loginService'
 import { meetingStores } from '../stores/meetingStores'
-import { ROUTER } from '../constants'
-import { cookieStorageHelpers } from '../helpers/cookieStorageHelpers'
 
 export type FormValues = {
   email: string
@@ -39,21 +37,6 @@ const useLogin = () => {
       }
       return onSubmit
     },
-    useAuth: () => {
-      const user: IUserLogin = meetingStores((state) => state.login)
-
-      let isAuthenticated: boolean = false
-      if (!user.userID) {
-        navigate('/login')
-        isAuthenticated = true
-      }
-      return {
-        navigate: () => navigate('/login'),
-        isAuthenticated,
-        user,
-      }
-    },
   }
 }
-
 export default useLogin

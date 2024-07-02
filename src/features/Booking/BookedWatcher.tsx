@@ -1,15 +1,15 @@
+import _ from 'lodash'
+import moment from 'moment'
 import { ReactNode } from 'react'
+import { useAuth } from '../../hooks/useAuth'
 import { useBookingAPIs } from '../../hooks/useBookingAPIs'
 import useBookingStores from '../../hooks/useBookingStores'
-import useLogin from '../../hooks/useLogin'
-import moment from 'moment'
 
 interface Props {
   children: ReactNode
 }
 
 const BookedWatcher = ({ children }: Props) => {
-  const { useAuth } = useLogin()
   const { user } = useAuth()
   const today = moment().format('YYYY-MM-DD')
   const { useFindBookedByUser } = useBookingAPIs()
@@ -20,7 +20,10 @@ const BookedWatcher = ({ children }: Props) => {
       dateToday: today,
     },
     (data) => {
-      addBooking(data)
+      let sorted
+      if (typeof data !== 'string')
+        sorted = _.orderBy(data, ['created'], ['desc'])
+      addBooking(sorted ?? [])
     },
   )
 
